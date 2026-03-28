@@ -31,6 +31,8 @@ spec:
           value: "https://vasavicafe.shop,https://www.vasavicafe.shop"
         - name: AWS_REGION
           value: "eu-north-1"
+        - name: AWS_SECRET_NAME
+          value: "hms/app-secrets"
 ---
 apiVersion: v1
 kind: Service
