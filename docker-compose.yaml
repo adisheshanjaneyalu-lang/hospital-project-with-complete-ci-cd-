@@ -1,0 +1,151 @@
+version: "3.9"
+
+services:
+
+  # ── PostgreSQL ───────────────────────────────────────────
+  postgres:
+    image: postgres:15
+    container_name: shivam-postgres
+    environment:
+      POSTGRES_USER: shivam_master
+      POSTGRES_PASSWORD: Adishesh7149#
+      POSTGRES_DB: shivamhospital
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shivam_master -d shivamhospital"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis ────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: shivam-redis
+    ports:
+      - "6379:6379"
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      retries: 3
+
+  # ── Auth Service ─────────────────────────────────────────
+  auth-service:
+    build:
+      context: ./services
+      dockerfile: auth/Dockerfile
+    container_name: shivam-auth
+    ports:
+      - "8001:8000"
+    restart: always
+    environment:
+      ENV: local
+      DATABASE_URL: postgresql://shivam_master:Adishesh7149%23@postgres:5432/shivamhospital
+      REDIS_URL: redis://redis:6379
+      AWS_REGION: eu-north-1
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # ── Appointment Service ──────────────────────────────────
+  appointment-service:
+    build:
+      context: ./services
+      dockerfile: appointment/Dockerfile
+    container_name: shivam-appointment
+    ports:
+      - "8002:8000"
+    restart: always
+    environment:
+      ENV: local
+      DATABASE_URL: postgresql://shivam_master:Adishesh7149%23@postgres:5432/shivamhospital
+      REDIS_URL: redis://redis:6379
+      AWS_REGION: eu-north-1
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # ── Records Service ──────────────────────────────────────
+  records-service:
+    build:
+      context: ./services
+      dockerfile: records/Dockerfile
+    container_name: shivam-records
+    ports:
+      - "8003:8000"
+    restart: always
+    environment:
+      ENV: local
+      DATABASE_URL: postgresql://shivam_master:Adishesh7149%23@postgres:5432/shivamhospital
+      REDIS_URL: redis://redis:6379
+      AWS_REGION: eu-north-1
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ── Billing Service ──────────────────────────────────────
+  billing-service:
+    build:
+      context: ./services
+      dockerfile: billing/Dockerfile
+    container_name: shivam-billing
+    ports:
+      - "8004:8000"
+    restart: always
+    environment:
+      ENV: local
+      DATABASE_URL: postgresql://shivam_master:Adishesh7149%23@postgres:5432/shivamhospital
+      REDIS_URL: redis://redis:6379
+      AWS_REGION: eu-north-1
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ── Notification Service ─────────────────────────────────
+  notification-service:
+    build:
+      context: ./services
+      dockerfile: notification/Dockerfile
+    container_name: shivam-notification
+    ports:
+      - "8005:8000"
+    restart: always
+    environment:
+      ENV: local
+      DATABASE_URL: postgresql://shivam_master:Adishesh7149%23@postgres:5432/shivamhospital
+      REDIS_URL: redis://redis:6379
+      AWS_REGION: eu-north-1
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ── Inventory Service ────────────────────────────────────
+  inventory-service:
+    build:
+      context: ./services
+      dockerfile: inventory/Dockerfile
+    container_name: shivam-inventory
+    ports:
+      - "8006:8000"
+    restart: always
+    environment:
+      ENV: local
+      DATABASE_URL: postgresql://shivam_master:Adishesh7149%23@postgres:5432/shivamhospital
+      REDIS_URL: redis://redis:6379
+      AWS_REGION: eu-north-1
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
