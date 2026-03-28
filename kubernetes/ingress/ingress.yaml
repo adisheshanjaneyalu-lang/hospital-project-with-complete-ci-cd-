@@ -10,6 +10,7 @@ spec:
   ingressClassName: nginx   # <-- use this instead of the deprecated annotation
   tls:
   - hosts:
+    - www.vasavicafe.shop
     - vasavicafe.shop
     secretName: vasavicafe-tls
   rules:
@@ -22,39 +23,39 @@ spec:
           service:
             name: auth-service
             port:
-              number: 8001
+              number: 8000
       - path: /appointments
         pathType: Prefix
         backend:
           service:
             name: appointment-service
             port:
-              number: 8002
+              number: 8000
       - path: /records
         pathType: Prefix
         backend:
           service:
             name: records-service
             port:
-              number: 8003
+              number: 8000
       - path: /billing
         pathType: Prefix
         backend:
           service:
             name: billing-service
             port:
-              number: 8004
+              number: 8000
       - path: /notifications
         pathType: Prefix
         backend:
           service:
             name: notification-service
             port:
-              number: 8005
+              number: 8000
       - path: /inventory
         pathType: Prefix
         backend:
           service:
             name: inventory-service
             port:
-              number: 8006
+              number: 8000
