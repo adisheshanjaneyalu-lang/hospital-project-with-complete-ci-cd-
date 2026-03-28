@@ -42,5 +42,5 @@ spec:
     app: auth-service
   ports:
   - port: 8000
-    targetPort: 8001
+    targetPort: 8000
 
