@@ -42,5 +42,5 @@ spec:
     app: appointment-service
   ports:
   - port: 8000
-    targetPort: 8002
+    targetPort: 8000
 
