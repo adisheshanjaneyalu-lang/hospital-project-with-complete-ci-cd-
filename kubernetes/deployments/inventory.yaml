@@ -42,5 +42,5 @@ spec:
     app: inventory-service
   ports:
   - port: 8000
-    targetPort: 8006
+    targetPort: 8000
 
