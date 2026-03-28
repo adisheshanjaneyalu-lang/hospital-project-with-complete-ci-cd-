@@ -42,5 +42,5 @@ spec:
     app: billing-service
   ports:
   - port: 8000
-    targetPort: 8004
+    targetPort: 8000
 
