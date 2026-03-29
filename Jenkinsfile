@@ -16,10 +16,19 @@ pipeline {
       }
     }
 
-  stage('SonarQube Analysis') {
+    // 🚫 QUALITY GATE
+    stage('Quality Gate') {
+      steps {
+        timeout(time: 2, unit: 'MINUTES') {
+          waitForQualityGate abortPipeline: true
+        }
+      }
+    }
+stage('SonarQube Analysis') {
   steps {
     script {
-      def scannerHome = tool 'sonar-scanner'
+      def scannerHome = tool 'sonar-scanner'   // 👈 uses Jenkins config
+
       withSonarQubeEnv('sonarqube') {
         withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
           sh """
@@ -34,15 +43,6 @@ pipeline {
     }
   }
 }
-    // 🚫 QUALITY GATE
-    stage('Quality Gate') {
-      steps {
-        timeout(time: 2, unit: 'MINUTES') {
-          waitForQualityGate abortPipeline: true
-        }
-      }
-    }
-
     // 🐳 BUILD
     stage('Build Images') {
       steps {
