@@ -7,55 +7,44 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/proxy-body-size: 50m
 spec:
-  ingressClassName: nginx   # <-- use this instead of the deprecated annotation
+  ingressClassName: nginx
   tls:
   - hosts:
-    - www.vasavicafe.shop
     - vasavicafe.shop
+    - www.vasavicafe.shop
     secretName: vasavicafe-tls
   rules:
   - host: vasavicafe.shop
     http:
       paths:
-      - path: /auth
+      - path: /api
         pathType: Prefix
         backend:
           service:
-            name: auth-service
+            name: hospital-api-service
             port:
               number: 8000
-      - path: /appointments
+      - path: /
         pathType: Prefix
         backend:
           service:
-            name: appointment-service
+            name: frontend-service
             port:
               number: 8000
-      - path: /records
+  - host: www.vasavicafe.shop
+    http:
+      paths:
+      - path: /api
         pathType: Prefix
         backend:
           service:
-            name: records-service
+            name: hospital-api-service
             port:
               number: 8000
-      - path: /billing
+      - path: /
         pathType: Prefix
         backend:
           service:
-            name: billing-service
-            port:
-              number: 8000
-      - path: /notifications
-        pathType: Prefix
-        backend:
-          service:
-            name: notification-service
-            port:
-              number: 8000
-      - path: /inventory
-        pathType: Prefix
-        backend:
-          service:
-            name: inventory-service
+            name: frontend-service
             port:
               number: 8000
