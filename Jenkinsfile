@@ -16,21 +16,24 @@ pipeline {
       }
     }
 
-    // 🔍 SONARQUBE ANALYSIS
-    stage('SonarQube Analysis') {
-      steps {
-        withSonarQubeEnv('sonarqube') {
-          sh '''
-            sonar-scanner \
+   stage('SonarQube Analysis') {
+  steps {
+    script {
+      def scannerHome = tool 'sonar-scanner'   // 👈 MUST match tool name
+
+      withSonarQubeEnv('sonarqube') {
+        withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+          sh """
+            ${scannerHome}/bin/sonar-scanner \
               -Dsonar.projectKey=shivam-hospital \
               -Dsonar.sources=. \
-              -Dsonar.host.url=http://13.60.99.233:9000 \
-              -Dsonar.login=$SONAR_AUTH_TOKEN\
-          '''
+              -Dsonar.login=$SONAR_TOKEN
+          """
         }
       }
     }
-
+  }
+}
     // 🚫 QUALITY GATE
     stage('Quality Gate') {
       steps {
