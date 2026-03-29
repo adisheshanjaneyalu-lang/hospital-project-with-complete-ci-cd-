@@ -56,7 +56,7 @@ stage('Trivy Scan') {
       def services = ['auth','appointment','records','billing','notification','inventory']
       
       // 1. Clean cache once before the loop starts
-      sh "trivy clean --cache"
+      sh "trivy clean --scan-cache"
 
       services.each { svc ->
         echo "Scanning ${svc}..."
