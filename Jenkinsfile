@@ -50,6 +50,15 @@ stage('Build Images') {
         }
     }
 } 
+stage('Trivy Scan') {
+    steps {
+        script {
+            // Clean cache and run scan; --exit-code 0 ensures it doesn't break the build
+            sh "trivy clean --cache"
+            sh "trivy image --exit-code 0 --severity HIGH,CRITICAL ${IMAGE_NAME}"
+        }
+    }
+}
 
     
 
