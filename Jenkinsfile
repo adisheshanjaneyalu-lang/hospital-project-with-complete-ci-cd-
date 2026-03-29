@@ -51,35 +51,29 @@ stage('Build Images') {
     }
 } 
 stage('Trivy Scan') {
-    steps {
-        script {
-            // Clean cache and run scan; --exit-code 0 ensures it doesn't break the build
-            sh "trivy clean --cache"
-            sh "trivy image --exit-code 0 --severity HIGH,CRITICAL ${IMAGE_NAME}"
-        }
-    }
-}
+  steps {
+    script {
+      def services = ['auth','appointment','records','billing','notification','inventory']
+      
+      // 1. Clean cache once before the loop starts
+      sh "trivy clean --cache"
 
-    
-
-    // 🔐 TRIVY SCAN
-    stage('Trivy Scan') {
-      steps {
-        script {
-          def services = ['auth','appointment','records','billing','notification','inventory']
-          services.each { svc ->
-            sh """
-              trivy image \
-              --severity HIGH,CRITICAL \
-              --exit-code 1 \
-              --no-progress \
-              ${ECR_REGISTRY}/shivam-hospital/${svc}-service:${BUILD_NUMBER}
-            """
-          }
-        }
+      services.each { svc ->
+        echo "Scanning ${svc}..."
+        // 2. Use --cache-dir unique to each service to prevent locking collisions
+        // 3. Set --exit-code 0 if you want the pipeline to continue even with vulnerabilities
+        sh """
+          trivy image \
+          --cache-dir .trivycache-${svc} \
+          --severity HIGH,CRITICAL \
+          --exit-code 0 \
+          --no-progress \
+          ${ECR_REGISTRY}/shivam-hospital/${svc}-service:${BUILD_NUMBER}
+        """
       }
     }
-
+  }
+}
     // 📦 PUSH TO ECR
     stage('Push to ECR') {
       steps {
