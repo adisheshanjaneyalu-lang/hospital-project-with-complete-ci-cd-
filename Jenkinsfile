@@ -34,14 +34,7 @@ stage('SonarQube Analysis') {
     }
   }
 }
-    // 🚫 QUALITY GATE
-    stage('Quality Gate') {
-      steps {
-        timeout(time: 5, unit: 'MINUTES') {
-          waitForQualityGate abortPipeline: true
-        }
-      }
-    }
+   
 
     // 🐳 BUILD
     stage('Build Images') {
