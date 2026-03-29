@@ -16,17 +16,17 @@ pipeline {
       }
     }
 
-   stage('SonarQube Analysis') {
+  stage('SonarQube Analysis') {
   steps {
     script {
-      def scannerHome = tool 'sonar-scanner'   // 👈 MUST match tool name
-
+      def scannerHome = tool 'sonar-scanner'
       withSonarQubeEnv('sonarqube') {
         withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
           sh """
             ${scannerHome}/bin/sonar-scanner \
               -Dsonar.projectKey=shivam-hospital \
-              -Dsonar.sources=. \
+              -Dsonar.sources=services \
+              -Dsonar.exclusions=**/node_modules/**,**/.git/**,**/*.log,**/venv/** \
               -Dsonar.login=$SONAR_TOKEN
           """
         }
