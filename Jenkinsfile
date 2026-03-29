@@ -21,7 +21,7 @@ stage('SonarQube Analysis') {
       def scannerHome = tool 'sonar-scanner'   // 👈 uses Jenkins config
 
       withSonarQubeEnv('sonarqube') {
-        withCredentials([string(credentialsId: 'sonar-token', variable: 'sonar')]) {
+        withCredentials([string(credentialsId: 'sonar', variable: 'SONAR_TOKEN')]) {
           sh """
             ${scannerHome}/bin/sonar-scanner \
               -Dsonar.projectKey=shivam-hospital \
