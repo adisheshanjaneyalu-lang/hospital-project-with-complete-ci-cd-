@@ -34,19 +34,24 @@ stage('SonarQube Analysis') {
     }
   }
 }
-   
-
-    // 🐳 BUILD
-    stage('Build Images') {
-      steps {
+  // 🐳 BUILD
+stage('Build Images') {
+    steps {
         script {
-          def services = ['auth','appointment','records','billing','notification','inventory']
-          services.each { svc ->
-            sh "docker build -t ${ECR_REGISTRY}/shivam-hospital/${svc}-service:${BUILD_NUMBER} ./services/${svc}"
-          }
+            def services = ['auth','appointment','records','billing','notification','inventory']
+            services.each { svc ->
+                sh """
+                    docker build \
+                        -t ${ECR_REGISTRY}/shivam-hospital/${svc}-service:${BUILD_NUMBER} \
+                        -f services/${svc}/Dockerfile \
+                        services/
+                """
+            }
         }
-      }
     }
+} 
+
+    
 
     // 🔐 TRIVY SCAN
     stage('Trivy Scan') {
