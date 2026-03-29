@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: inventory
-        image: 283904064984.dkr.ecr.eu-north-1.amazonaws.com/shivam-hospital/inventory-service:latest
+        image: 283904064984.dkr.ecr.eu-north-1.amazonaws.com/shivam-hospital/inventory-service:36
         ports:
         - containerPort: 8000
         resources:

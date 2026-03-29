@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: appointment
-        image: 283904064984.dkr.ecr.eu-north-1.amazonaws.com/shivam-hospital/appointment-service:latest
+        image: 283904064984.dkr.ecr.eu-north-1.amazonaws.com/shivam-hospital/appointment-service:36
         ports:
         - containerPort: 8000
         resources:

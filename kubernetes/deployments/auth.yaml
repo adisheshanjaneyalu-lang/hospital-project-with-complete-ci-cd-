@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: auth
-        image: 283904064984.dkr.ecr.eu-north-1.amazonaws.com/shivam-hospital/auth-service:latest
+        image: 283904064984.dkr.ecr.eu-north-1.amazonaws.com/shivam-hospital/auth-service:36
         ports:
         - containerPort: 8000
         resources:
