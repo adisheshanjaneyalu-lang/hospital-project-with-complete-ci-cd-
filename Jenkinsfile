@@ -24,8 +24,8 @@ pipeline {
             sonar-scanner \
               -Dsonar.projectKey=shivam-hospital \
               -Dsonar.sources=. \
-              -Dsonar.host.url=http://<YOUR-IP>:9000 \
-              -Dsonar.login=$SONAR_AUTH_TOKEN
+              -Dsonar.host.url=http://http://13.60.99.233:9000 \
+              -Dsonar.login=$SONAR_AUTH_TOKEN\
           '''
         }
       }
