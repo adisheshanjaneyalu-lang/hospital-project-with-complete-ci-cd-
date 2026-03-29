@@ -118,3 +118,36 @@ stage('Trivy Scan') {
     failure { echo '❌ Pipeline failed — check logs' }
   }
 }
+    // 🐙 GITOPS DEPLOY (Updating your same repo)
+    stage('Update Manifests in GitHub') {
+      steps {
+        script {
+          // 1. Tell Jenkins who is making the change
+          sh """
+            git config user.email "jenkins-bot@hospital.com"
+            git config user.name "Jenkins Bot"
+          """
+
+          // 2. Use your GitHub Token from Jenkins Credentials
+          withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
+            def services = ['auth','appointment','records','billing','notification','inventory']
+            
+            services.each { svc ->
+              echo "✏️ Updating image for ${svc} in kubernetes/deployments/..."
+              
+              // 3. This command looks inside the 'deployments' sub-folder 
+              // and swaps the old image tag with the new ${BUILD_NUMBER}
+              sh "sed -i 's|image: .*/${svc}-service:.*|image: ${ECR_REGISTRY}/shivam-hospital/${svc}-service:${BUILD_NUMBER}|g' kubernetes/deployments/${svc}.yaml"
+            }
+
+            // 4. Save and Push the changes back to GitHub
+            // [skip ci] tells Jenkins NOT to start a new build after this push
+            sh """
+              git add kubernetes/deployments/*.yaml
+              git commit -m "chore: update images to build ${BUILD_NUMBER} [skip ci]"
+              git push https://${GITHUB_TOKEN}@://github.com HEAD:main
+            """
+          }
+        }
+      }
+    }
