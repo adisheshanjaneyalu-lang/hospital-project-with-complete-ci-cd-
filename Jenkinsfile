@@ -6,7 +6,7 @@ pipeline {
     AWS_ACCOUNT  = '283904064984'
     ECR_REGISTRY = "${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com"
     CLUSTER_NAME = 'shivam-hospital-prod'
-    REPO_URL     = '://github.com'
+    REPO_URL     = '://github.com/adisheshanjaneyalu-lang/hospital-project-with-complete-ci-cd-.git'
   }
 
   stages {
